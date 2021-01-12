@@ -74,6 +74,8 @@ import {MatSlider} from './slider';
   @Input()
   set disabled(v: boolean) { throw Error('Invalid attribute "disabled" on MatSliderThumb.'); }
 
+  @Output() focus: EventEmitter<void> = new EventEmitter<void>();
+  @Output() blur: EventEmitter<void> = new EventEmitter<void>();
 
   /** Indicates which slider thumb this input corresponds to. */
   thumb: Thumb;
@@ -103,6 +105,18 @@ import {MatSlider} from './slider';
   }
 
   getRootEl(): HTMLInputElement { return this._el.nativeElement; };
+
+  isFocused: boolean = false;
+
+  @HostListener('focusin') onFocusIn(): void {
+    this.isFocused = true;
+    this.focus.emit();
+  }
+
+  @HostListener('focusout') onFocusOut(): void {
+    this.isFocused = false;
+    this.blur.emit();
+  }
 
   static ngAcceptInputType_value: NumberInput;
 }
